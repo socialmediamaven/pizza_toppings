@@ -10,7 +10,7 @@
 'use strict';
 
 var PizzaToppingsAnalyzer = require('./PizzaToppingsAnalyzer/PizzaToppingsAnalyzer.js'),
-	pizzaAnalyzer 		  = new PizzaToppingsAnalyzer('http://files.olo.com/pizzas.json');
+	pizzaAnalyzer 		  = new PizzaToppingsAnalyzer('./pizzas.json');//'http://files.olo.com/pizzas.json');
 
 
 

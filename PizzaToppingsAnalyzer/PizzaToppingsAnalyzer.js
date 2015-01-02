@@ -11,7 +11,7 @@
 var request  	= require('request'),
 	JSONStream 	= require('JSONStream'),
 	es 	        = require('event-stream'),
-	// fs 			= require('fs'), // only if we need to perform locally
+	 fs 			= require('fs'), // only if we need to perform locally
 	async  	    = require('async');
 
 /**
@@ -99,20 +99,26 @@ PizzaToppingsAnalyzer.prototype.init = function(inCallback){
 				// so that node won't buffer chunks into memory needlessly when the remote client is on a
 				// really slow or high-latency connection.
 
-				request({url: self.pizzaToppingsUrl})  // downloading the file
-				 // fs.createReadStream(self.pizzaToppingsUrl) // only if we need to perform locally
-				.pipe(JSONStream.parse([true,'toppings',true])) // parsing it via properties we need
+				//request({url: self.pizzaToppingsUrl})  // downloading the file
+				 fs.createReadStream(self.pizzaToppingsUrl) // only if we need to perform locally
+				.pipe(JSONStream.parse([true,'toppings'])) // parsing it via properties we need
 				.pipe(es.map(function (data,cb) {    // using event-stream we map the objects
-
+					console.log(data);
 					// creating a hash key based on topping 
 					// most probably that we already have this topping, thus
 					// the "if" order is taken into consideration
-					if (self.hashMap.hasOwnProperty(data)){
-						self.hashMap[data] += 1;
-					}
-					else{
-						self.hashMap[data] = 1;
-					}//if
+					data.forEach(function(topping){
+
+						if (self.hashMap.hasOwnProperty(topping)){
+							self.hashMap[topping] += 1;
+						}
+						else{
+							self.hashMap[topping] = 1;
+						}//if
+						console.log(topping);
+						console.log(self.hashMap[topping]);
+					});// forEach
+					
 
 					cb(null,JSON.stringify(data));
 				}))
